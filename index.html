@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Рабочий помощник</title>
+<style>
+:root{--b:#0f766e;--b2:#134e4a;--soft:#e3f3f0;--g:#f3f9f8;--fg:#1f2937;--mu:#5b6f6c;--bd:#d3e6e2;--red:#b4443f;--ok:#2f855a;--warn:#b45309}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--g);color:var(--fg);font:15px/1.55 system-ui,"Segoe UI",Roboto,Arial,sans-serif;overflow-x:hidden}
+nav{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--bd);display:flex;gap:2px;align-items:center;padding:8px 20px;flex-wrap:wrap}
+nav b{color:var(--b2);margin-right:auto;font-size:1.05rem}
+nav a{color:var(--fg);text-decoration:none;padding:6px 12px;border-radius:8px;font-size:.92rem}
+nav a:hover{background:var(--soft);color:var(--b)}
+section{max-width:1080px;margin:0 auto;padding:40px 16px}
+h1{font-size:clamp(1.9rem,5vw,2.8rem);line-height:1.15;margin:0 0 12px;color:var(--b2)}
+h2{font-size:1.5rem;margin:0 0 4px;color:var(--b2)}
+h3{margin:0 0 10px;font-size:1.05rem}
+.lead{color:var(--mu);margin:0 0 20px}
+.hero{max-width:none;background:linear-gradient(180deg,#e3f3f0,#fff);border-bottom:1px solid var(--bd);padding:56px 16px}
+.hero>div{max-width:1080px;margin:0 auto}.hero p{max-width:620px;font-size:1.05rem}
+.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:22px 0 26px}
+.feat div{background:var(--g);border:1px solid var(--bd);border-radius:8px;padding:12px 14px}
+.card{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:18px;margin-bottom:16px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.two .card{margin:0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}.row>*{flex:1 1 130px}
+label{font-size:.75rem;color:var(--mu);display:block;margin-bottom:2px}
+input,select,textarea{width:100%;padding:9px 11px;border:1.5px solid var(--bd);border-radius:8px;font:inherit;background:#fff;color:var(--fg)}
+input:focus,select:focus{outline:0;border-color:var(--b);box-shadow:0 0 0 3px rgba(15,118,110,.15)}
+.btn{display:inline-block;background:var(--b);color:#fff;border:0;border-radius:8px;padding:10px 18px;font:500 .95rem inherit;cursor:pointer;text-decoration:none;flex:0 0 auto;margin:0}
+.btn:hover{background:var(--b2)}.btn.alt{background:#fff;color:var(--b);border:1.5px solid var(--b)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--bd);text-align:left;white-space:nowrap}
+th{background:var(--g);color:var(--mu);font-size:.78rem;text-transform:uppercase}
+tr.late td{background:#fcefee}tr.done td:not(:last-child){color:var(--mu);text-decoration:line-through}
+.x,.ed{border:0;background:none;cursor:pointer;font-size:1rem;color:var(--mu)}.x:hover{color:var(--red)}.ed:hover{color:var(--b)}
+.msg{padding:8px 12px;border-radius:6px;margin:5px 0;font-size:.92rem}
+.warn{background:#fdf4e6;border-left:3px solid var(--warn)}.bad{background:#fcefee;border-left:3px solid var(--red)}.good{background:#e8f6ee;border-left:3px solid var(--ok)}
+.muted{color:var(--mu)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+.stats div{background:var(--soft);border-radius:8px;padding:10px 14px;color:var(--mu);font-size:.85rem}
+.stats b{display:block;font-size:1.7rem;color:var(--b2)}.stats .r b{color:var(--red)}.stats .g b{color:var(--ok)}
+.bar{height:14px;background:var(--soft);border-radius:4px;overflow:hidden;margin:6px 0}.bar i{display:block;height:100%;background:var(--b);border-radius:4px;transition:width .3s}
+.cb{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:.9rem}.cb span{flex:0 0 110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cb div{flex:1;background:var(--soft);border-radius:6px;height:16px}.cb i{display:block;height:100%;background:var(--b);border-radius:6px}.cb em{flex:0 0 36px;font-style:normal;color:var(--mu);text-align:right}
+.donut{display:flex;gap:18px;align-items:center;flex-wrap:wrap}.donut svg{width:130px;height:130px}
+.lg div{margin:3px 0}.lg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px}
+footer{text-align:center;color:var(--mu);font-size:.85rem;padding:20px}footer a{color:var(--b);cursor:pointer}
+@media(max-width:640px){nav b{width:100%}.two{grid-template-columns:1fr}.btn{width:100%;text-align:center}section{padding:30px 12px}}
+@media print{nav,.noprint,.hero,#collect,#tasks,#control,footer{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<nav>
+  <b>Рабочий помощник</b>
+  <a href="#collect">Сбор данных</a><a href="#tasks">Задачи</a><a href="#control">Контроль сроков</a><a href="#report">Отчёты</a>
+</nav>
+
+<!-- БЛОК 1. ГЛАВНАЯ -->
+<section class="hero"><div>
+  <h1>Рабочий помощник</h1>
+  <p><b>Здравствуйте!</b> Соберите информацию, расставьте задачи, следите за сроками и получайте готовые отчёты в одном месте. Всё работает прямо в браузере и хранится на вашем компьютере.</p>
+  <div class="feat">
+    <div><b>Сбор данных</b><br><span class="muted">вручную или из Excel</span></div>
+    <div><b>Задачи</b><br><span class="muted">ответственные и статусы</span></div>
+    <div><b>Контроль сроков</b><br><span class="muted">дедлайны и напоминания</span></div>
+    <div><b>Отчёты</b><br><span class="muted">диаграммы, Excel, PDF</span></div>
+  </div>
+  <a class="btn" href="#collect">Перейти к работе</a>
+</div></section>
+
+<!-- БЛОК 2. СБОР И ОБРАБОТКА -->
+<section id="collect">
+  <h2>Сбор и обработка информации</h2>
+  <p class="lead">Добавляйте записи вручную или загрузите файл Excel (.xlsx) или CSV со столбцами: Категория, Название, Значение, Дата, Примечание.</p>
+  <div class="two">
+    <div class="card">
+      <h3>Новая запись</h3>
+      <div class="row">
+        <div><label>Категория *</label><input id="rCat" list="cats" maxlength="50"><datalist id="cats"></datalist></div>
+        <div><label>Название *</label><input id="rName" maxlength="120"></div>
+        <div><label>Значение (число)</label><input id="rVal" type="number" step="any"></div>
+        <div><label>Дата</label><input id="rDate" type="date"></div>
+        <div style="flex-basis:100%"><label>Примечание</label><input id="rNote" maxlength="200"></div>
+        <button class="btn" id="rAdd">Добавить</button>
+      </div>
+      <div id="rErr"></div>
+    </div>
+    <div class="card">
+      <h3>Загрузка файла Excel / CSV</h3>
+      <p class="muted">Помощник проверит обязательные поля, числа и даты, а замечания покажет списком.</p>
+      <label class="btn">Выбрать файл<input type="file" id="rFile" accept=".xlsx,.csv,.txt" hidden></label>
+      <div id="rImp" style="margin-top:10px"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="row" style="margin-bottom:8px"><h3 style="flex:1 1 auto;margin:0">Записи по категориям</h3><select id="rFilter" style="flex:0 0 200px"></select></div>
+    <div class="scroll"><table><thead><tr><th>Категория</th><th>Название</th><th>Значение</th><th>Дата</th><th>Примечание</th><th></th></tr></thead><tbody id="rBody"></tbody></table></div>
+    <h3 style="margin-top:16px">Сводка по категориям</h3>
+    <div class="scroll"><table><thead><tr><th>Категория</th><th>Записей</th><th>Сумма</th></tr></thead><tbody id="rSum"></tbody></table></div>
+  </div>
+</section>
+
+<!-- БЛОК 3. ЗАДАЧИ -->
+<section id="tasks">
+  <h2>Управление задачами</h2>
+  <p class="lead">Создавайте, редактируйте и отслеживайте задачи.</p>
+  <div class="card">
+    <h3 id="tHead">Новая задача</h3>
+    <div class="row">
+      <div style="flex:3 1 220px"><label>Задача *</label><input id="tTitle" maxlength="150"></div>
+      <div><label>Ответственный</label><input id="tOwner"></div>
+      <div><label>Срок</label><input id="tDate" type="date"></div>
+      <div><label>Статус</label><select id="tStat"><option>Новая</option><option>В работе</option><option>Выполнена</option></select></div>
+      <button class="btn" id="tSave">Добавить</button><button class="btn alt" id="tCancel" style="display:none">Отмена</button>
+    </div>
+  </div>
+  <div class="card"><div class="scroll"><table><thead><tr><th>Задача</th><th>Ответственный</th><th>Срок</th><th>Статус</th><th></th></tr></thead><tbody id="tBody"></tbody></table></div></div>
+</section>
+
+<!-- БЛОК 4. КОНТРОЛЬ СРОКОВ -->
+<section id="control">
+  <h2>Контроль сроков выполнения</h2>
+  <p class="lead">Ближайшие дедлайны и напоминания.</p>
+  <div id="remind"></div>
+  <div class="two">
+    <div class="card"><h3>Выполнение: <span id="cPct">0%</span></h3><div class="bar"><i id="cBar" style="width:0"></i></div><p class="muted" id="cTxt"></p><h3 style="margin-top:14px">Просроченные</h3><div id="cLate"></div></div>
+    <div class="card"><h3>Ближайшие дедлайны</h3><div id="cNext"></div></div>
+  </div>
+</section>
+
+<!-- БЛОК 5. ОТЧЁТЫ -->
+<section id="report">
+  <h2>Формирование отчётов</h2>
+  <p class="lead">Отчёт обновляется автоматически при любом изменении данных.</p>
+  <div class="card">
+    <div class="row noprint" style="margin-bottom:12px"><button class="btn" id="xExcel">Экспорт в Excel</button><button class="btn alt" id="xPdf">Экспорт в PDF (печать)</button></div>
+    <div class="muted" id="rDateLine"></div>
+    <div class="stats" id="rStats"></div>
+    <div class="two">
+      <div><h3>Задачи по статусам</h3><div class="donut" id="rDonut"></div></div>
+      <div><h3>Записи по категориям</h3><div id="rBars"></div></div>
+    </div>
+    <h3 style="margin-top:16px">Анализ просроченных задач</h3>
+    <div class="scroll"><table><thead><tr><th>Задача</th><th>Ответственный</th><th>Срок</th><th>Просрочка, дн.</th></tr></thead><tbody id="rLate"></tbody></table></div>
+  </div>
+</section>
+
+<footer>Данные хранятся в вашем браузере. <a id="bExp">Скачать резервную копию</a> · <a id="bImpL">Восстановить</a><input type="file" id="bImp" accept=".json" hidden></footer>
+
+<script>
+(function(){
+var KEY="rabochiy_pomoshnik_v1",db={recs:[],tasks:[]};
+try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.recs)&&Array.isArray(s.tasks))db=s}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
+function $(s){return document.querySelector(s)}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function iso(d){return d.toLocaleDateString("sv-SE")}
+function fmt(i){return i?i.split("-").reverse().join("."):"—"}
+function days(a,b){return Math.round((new Date(a)-new Date(b))/864e5)}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
+function dl(n,t,m){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+t],{type:m}));a.download=n;document.body.appendChild(a);a.click();a.remove()}
+var TODAY=iso(new Date());
+function num(v){var x=String(v).replace(/\s| /g,"").replace(",",".");return x!==""&&!isNaN(x)?parseFloat(x):null}
+function okDate(s){return /^\d{4}-\d{2}-\d{2}$/.test(s)&&!isNaN(new Date(s))}
+function normDate(v){v=String(v).trim();if(v==="")return"";var n=num(v);
+ if(n!==null&&n>20000&&n<80000)return new Date(Date.UTC(1899,11,30)+n*864e5).toISOString().slice(0,10);
+ var m=v.match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})$/);if(m)return m[3]+"-"+("0"+m[2]).slice(-2)+"-"+("0"+m[1]).slice(-2);return v}
+function late(t){return t.status!="Выполнена"&&t.due&&t.due<TODAY}
+
+/* ===== ЗАПИСИ ===== */
+function cats(){var o={};db.recs.forEach(function(r){o[r.cat]=1});return Object.keys(o).sort()}
+function drawRecs(){
+ var c=cats(),f=$("#rFilter").value||"";
+ $("#cats").innerHTML=c.map(function(x){return'<option value="'+esc(x)+'">'}).join("");
+ $("#rFilter").innerHTML='<option value="">Все категории</option>'+c.map(function(x){return'<option'+(x==f?" selected":"")+'>'+esc(x)+'</option>'}).join("");
+ var rows=db.recs.filter(function(r){return!f||r.cat==f});
+ $("#rBody").innerHTML=rows.length?rows.map(function(r){return'<tr><td>'+esc(r.cat)+'</td><td>'+esc(r.name)+'</td><td>'+(r.val===""?"—":r.val)+'</td><td>'+fmt(r.date)+'</td><td>'+esc(r.note)+'</td><td><button class="x" data-rd="'+r.id+'" title="Удалить">✕</button></td></tr>'}).join(""):'<tr><td colspan="6" class="muted">Записей пока нет</td></tr>';
+ $("#rSum").innerHTML=c.length?c.map(function(k){var a=db.recs.filter(function(r){return r.cat==k}),sum=a.reduce(function(s,r){return s+(r.val===""?0:+r.val)},0);return'<tr><td>'+esc(k)+'</td><td>'+a.length+'</td><td>'+Math.round(sum*100)/100+'</td></tr>'}).join(""):'<tr><td colspan="3" class="muted">—</td></tr>';
+}
+$("#rAdd").onclick=function(){
+ var cat=$("#rCat").value.trim(),name=$("#rName").value.trim(),v=$("#rVal").value,d=$("#rDate").value,err=[];
+ if(!cat)err.push("Заполните категорию");if(!name)err.push("Заполните название");
+ $("#rErr").innerHTML=err.map(function(e){return'<div class="msg bad">'+e+'</div>'}).join("");if(err.length)return;
+ db.recs.push({id:uid(),cat:cat,name:name,val:v===""?"":+v,date:d,note:$("#rNote").value.trim()});save();
+ ["#rName","#rVal","#rDate","#rNote"].forEach(function(i){$(i).value=""});drawAll()};
+$("#rFilter").onchange=drawRecs;
+$("#rBody").onclick=function(e){var id=e.target.dataset.rd;if(id&&confirm("Удалить запись?")){db.recs=db.recs.filter(function(r){return r.id!=id});save();drawAll()}};
+
+/* чтение xlsx без библиотек: zip + DecompressionStream */
+async function inflate(u8){var s=new Blob([u8]).stream().pipeThrough(new DecompressionStream("deflate-raw"));return new Uint8Array(await new Response(s).arrayBuffer())}
+async function readXlsx(buf){
+ var dv=new DataView(buf),u8=new Uint8Array(buf),e=u8.length-22;
+ while(e>=0&&dv.getUint32(e,true)!==0x06054b50)e--;
+ if(e<0)throw new Error("zip");
+ var n=dv.getUint16(e+10,true),p=dv.getUint32(e+16,true),files={},dec=new TextDecoder();
+ for(var i=0;i<n;i++){
+  var meth=dv.getUint16(p+10,true),cs=dv.getUint32(p+20,true),nl=dv.getUint16(p+28,true),el=dv.getUint16(p+30,true),cl=dv.getUint16(p+32,true),lo=dv.getUint32(p+42,true),name=dec.decode(u8.subarray(p+46,p+46+nl));
+  files[name]={m:meth,cs:cs,lo:lo};p+=46+nl+el+cl}
+ async function get(nm){var f=files[nm];if(!f)return null;var ds=f.lo+30+dv.getUint16(f.lo+26,true)+dv.getUint16(f.lo+28,true),d=u8.subarray(ds,ds+f.cs);return dec.decode(f.m===0?d:await inflate(d))}
+ var sheetName=Object.keys(files).filter(function(k){return/^xl\/worksheets\/sheet\d+\.xml$/.test(k)}).sort()[0];
+ if(!sheetName)throw new Error("sheet");
+ var P=new DOMParser(),ss=[],sx=await get("xl/sharedStrings.xml");
+ if(sx)P.parseFromString(sx,"application/xml").querySelectorAll("si").forEach(function(si){ss.push(Array.prototype.map.call(si.querySelectorAll("t"),function(t){return t.textContent}).join(""))});
+ var rows=[];
+ P.parseFromString(await get(sheetName),"application/xml").querySelectorAll("row").forEach(function(r){
+  var row=[];r.querySelectorAll("c").forEach(function(c){
+   var m=(c.getAttribute("r")||"").match(/^([A-Z]+)/),ci=0;if(m)for(var k=0;k<m[1].length;k++)ci=ci*26+m[1].charCodeAt(k)-64;ci=ci?ci-1:row.length;
+   var t=c.getAttribute("t"),v=c.querySelector("v"),val=v?v.textContent:"";
+   if(t=="s")val=ss[+val]||"";else if(t=="inlineStr")val=c.textContent;row[ci]=val});
+  for(var j=0;j<row.length;j++)if(row[j]===undefined)row[j]="";rows.push(row)});
+ return rows}
+function parseCsv(txt){
+ var f=txt.split(/\r?\n/)[0],d=f.indexOf("\t")>-1?"\t":(f.split(";").length>f.split(",").length?";":","),rows=[],row=[],cur="",q=false;
+ for(var i=0;i<txt.length;i++){var c=txt[i];
+  if(q){if(c=='"'){if(txt[i+1]=='"'){cur+='"';i++}else q=false}else cur+=c}
+  else if(c=='"')q=true;else if(c==d){row.push(cur);cur=""}
+  else if(c=="\n"||c=="\r"){if(c=="\r"&&txt[i+1]=="\n")i++;row.push(cur);rows.push(row);row=[];cur=""}else cur+=c}
+ if(cur!==""||row.length){row.push(cur);rows.push(row)}return rows}
+function importRows(rows){
+ rows=rows.filter(function(r){return r.some(function(x){return String(x).trim()!==""})});
+ if(rows.length<2)return{msgs:[["bad","В файле нет данных (нужны заголовки и хотя бы одна строка)"]]};
+ var h=rows[0].map(function(x){return String(x).trim().toLowerCase()});
+ function ix(names,def){for(var i=0;i<h.length;i++)if(names.indexOf(h[i])>-1)return i;return def}
+ var I={cat:ix(["категория","category"],0),name:ix(["название","наименование","имя","name"],1),val:ix(["значение","сумма","количество","value"],2),date:ix(["дата","date"],3),note:ix(["примечание","комментарий","note"],4)};
+ var added=0,msgs=[];
+ rows.slice(1).forEach(function(r,k){
+  var ln=k+2,cat=String(r[I.cat]||"").trim(),name=String(r[I.name]||"").trim();
+  if(!cat||!name){msgs.push(["bad","Строка "+ln+": пропущена — не заполнено "+(!cat&&!name?"«Категория» и «Название»":!cat?"«Категория»":"«Название»")]);return}
+  var vr=String(r[I.val]==null?"":r[I.val]).trim(),val="";
+  if(vr!==""){var nv=num(vr);if(nv===null)msgs.push(["warn","Строка "+ln+": значение «"+vr+"» не число — оставлено пустым"]);else val=nv}
+  var dt=normDate(r[I.date]==null?"":r[I.date]);
+  if(dt!==""&&!okDate(dt)){msgs.push(["warn","Строка "+ln+": некорректная дата «"+dt+"» — оставлена пустой"]);dt=""}
+  db.recs.push({id:uid(),cat:cat,name:name,val:val,date:dt,note:String(r[I.note]||"").trim()});added++});
+ msgs.unshift([added?"good":"bad","Импортировано записей: "+added]);return{msgs:msgs}}
+$("#rFile").onchange=async function(e){
+ var f=e.target.files[0];if(!f)return;var out;
+ try{var rows;
+  if(/\.xlsx$/i.test(f.name)){if(typeof DecompressionStream=="undefined")throw new Error("browser");rows=await readXlsx(await f.arrayBuffer())}
+  else rows=parseCsv(await f.text());
+  out=importRows(rows);save();drawAll()}
+ catch(x){out={msgs:[["bad",x.message=="browser"?"Этот браузер не умеет читать .xlsx — сохраните файл как CSV":"Не удалось прочитать файл. Поддерживаются .xlsx (Excel 2007+) и CSV"]]}}
+ $("#rImp").innerHTML=out.msgs.slice(0,30).map(function(m){return'<div class="msg '+m[0]+'">'+esc(m[1])+'</div>'}).join("")+(out.msgs.length>30?'<div class="msg warn">…и ещё замечаний: '+(out.msgs.length-30)+'</div>':"");
+ e.target.value=""};
+
+/* ===== ЗАДАЧИ ===== */
+var editId=null;
+function drawTasks(){
+ var rows=db.tasks.slice().sort(function(a,b){var x=a.status=="Выполнена",y=b.status=="Выполнена";if(x!=y)return x?1:-1;return(a.due||"9999").localeCompare(b.due||"9999")});
+ $("#tBody").innerHTML=rows.length?rows.map(function(t){return'<tr class="'+(late(t)?"late":"")+(t.status=="Выполнена"?" done":"")+'"><td>'+esc(t.title)+'</td><td>'+esc(t.owner||"—")+'</td><td>'+fmt(t.due)+(late(t)?" ⚠":"")+'</td><td>'+t.status+'</td><td><button class="ed" data-te="'+t.id+'" title="Редактировать">✎</button> <button class="x" data-td="'+t.id+'" title="Удалить">✕</button></td></tr>'}).join(""):'<tr><td colspan="5" class="muted">Задач пока нет</td></tr>'}
+function resetForm(){editId=null;$("#tHead").textContent="Новая задача";$("#tSave").textContent="Добавить";$("#tCancel").style.display="none";["#tTitle","#tOwner","#tDate"].forEach(function(i){$(i).value=""});$("#tStat").value="Новая"}
+$("#tSave").onclick=function(){
+ var title=$("#tTitle").value.trim();if(!title){alert("Введите название задачи");return}
+ var v={title:title,owner:$("#tOwner").value.trim(),due:$("#tDate").value,status:$("#tStat").value};
+ if(editId){db.tasks.forEach(function(t){if(t.id==editId){Object.assign(t,v);t.doneAt=t.status=="Выполнена"?(t.doneAt||TODAY):null}})}
+ else db.tasks.push(Object.assign({id:uid(),created:TODAY,doneAt:v.status=="Выполнена"?TODAY:null},v));
+ save();resetForm();drawAll()};
+$("#tCancel").onclick=resetForm;
+$("#tBody").onclick=function(e){var d=e.target.dataset;
+ if(d.td){if(confirm("Удалить задачу?")){db.tasks=db.tasks.filter(function(t){return t.id!=d.td});save();drawAll()}}
+ else if(d.te){var t=db.tasks.filter(function(x){return x.id==d.te})[0];editId=t.id;$("#tTitle").value=t.title;$("#tOwner").value=t.owner||"";$("#tDate").value=t.due||"";$("#tStat").value=t.status;$("#tHead").textContent="Редактирование задачи";$("#tSave").textContent="Сохранить";$("#tCancel").style.display="";$("#tasks").scrollIntoView()}};
+
+/* ===== КОНТРОЛЬ ===== */
+function drawControl(){
+ var T=db.tasks,done=T.filter(function(t){return t.status=="Выполнена"}).length,p=T.length?Math.round(done/T.length*100):0;
+ $("#cPct").textContent=p+"%";$("#cBar").style.width=p+"%";$("#cTxt").textContent="Выполнено "+done+" из "+T.length+" задач";
+ var lt=T.filter(late),act=T.filter(function(t){return t.status!="Выполнена"&&t.due&&t.due>=TODAY}).sort(function(a,b){return a.due.localeCompare(b.due)});
+ $("#cLate").innerHTML=lt.length?lt.map(function(t){return'<div class="msg bad">'+esc(t.title)+' — срок '+fmt(t.due)+' (просрочено на '+days(TODAY,t.due)+' дн.)</div>'}).join(""):'<div class="msg good">Просроченных задач нет</div>';
+ $("#cNext").innerHTML=act.length?act.slice(0,6).map(function(t){var d=days(t.due,TODAY);return'<div class="msg '+(d<=2?"warn":"good")+'">'+esc(t.title)+' — '+fmt(t.due)+' ('+(d==0?"сегодня":d==1?"завтра":"через "+d+" дн.")+')</div>'}).join(""):'<p class="muted">Нет предстоящих дедлайнов</p>';
+ var soon=act.filter(function(t){return days(t.due,TODAY)<=2});
+ $("#remind").innerHTML=(lt.length?'<div class="msg bad">Просрочено задач: <b>'+lt.length+'</b></div>':"")+(soon.length?'<div class="msg warn">Срок истекает в ближайшие 2 дня: <b>'+soon.length+'</b></div>':"")}
+
+/* ===== ОТЧЁТ ===== */
+var COL={"Новая":"#9fb8b4","В работе":"#0f766e","Выполнена":"#2f855a"};
+function drawReport(){
+ var T=db.tasks,cnt={"Новая":0,"В работе":0,"Выполнена":0},lt=T.filter(late);T.forEach(function(t){cnt[t.status]++});
+ $("#rDateLine").textContent="Отчёт сформирован: "+fmt(TODAY);
+ $("#rStats").innerHTML='<div><b>'+T.length+'</b>всего задач</div><div class="g"><b>'+cnt["Выполнена"]+'</b>выполнено</div><div><b>'+(T.length-cnt["Выполнена"])+'</b>не выполнено</div><div class="r"><b>'+lt.length+'</b>просрочено</div><div><b>'+db.recs.length+'</b>записей данных</div>';
+ var tot=T.length,off=0,R=48,C=2*Math.PI*R,arcs="";
+ if(tot)Object.keys(cnt).forEach(function(k){var l=cnt[k]/tot*C;if(l)arcs+='<circle cx="65" cy="65" r="'+R+'" fill="none" stroke="'+COL[k]+'" stroke-width="22" stroke-dasharray="'+l+' '+(C-l)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 65 65)"/>';off+=l});
+ else arcs='<circle cx="65" cy="65" r="'+R+'" fill="none" stroke="#dcebe8" stroke-width="22"/>';
+ $("#rDonut").innerHTML='<svg viewBox="0 0 130 130">'+arcs+'<text x="65" y="71" text-anchor="middle" font-size="20" font-weight="700" fill="#134e4a">'+tot+'</text></svg><div class="lg">'+Object.keys(cnt).map(function(k){return'<div><i style="background:'+COL[k]+'"></i>'+k+': '+cnt[k]+'</div>'}).join("")+'</div>';
+ var c=cats(),mx=1,by={};c.forEach(function(k){by[k]=db.recs.filter(function(r){return r.cat==k}).length;mx=Math.max(mx,by[k])});
+ $("#rBars").innerHTML=c.length?c.map(function(k){return'<div class="cb"><span title="'+esc(k)+'">'+esc(k)+'</span><div><i style="width:'+by[k]/mx*100+'%"></i></div><em>'+by[k]+'</em></div>'}).join(""):'<p class="muted">Данных пока нет</p>';
+ $("#rLate").innerHTML=lt.length?lt.map(function(t){return'<tr><td>'+esc(t.title)+'</td><td>'+esc(t.owner||"—")+'</td><td>'+fmt(t.due)+'</td><td>'+days(TODAY,t.due)+'</td></tr>'}).join(""):'<tr><td colspan="4" class="muted">Просроченных задач нет</td></tr>'}
+function q(v){v=String(v==null?"":v);return'"'+v.replace(/"/g,'""')+'"'}
+$("#xExcel").onclick=function(){
+ var L=[["ОТЧЁТ",fmt(TODAY)],[],["ЗАДАЧИ"],["Задача","Ответственный","Срок","Статус","Просрочено, дн."]];
+ db.tasks.forEach(function(t){L.push([t.title,t.owner,fmt(t.due),t.status,late(t)?days(TODAY,t.due):""])});
+ L.push([],["ЗАПИСИ ДАННЫХ"],["Категория","Название","Значение","Дата","Примечание"]);
+ db.recs.forEach(function(r){L.push([r.cat,r.name,r.val,fmt(r.date),r.note])});
+ L.push([],["СВОДКА"],["Всего задач",db.tasks.length],["Выполнено",db.tasks.filter(function(t){return t.status=="Выполнена"}).length],["Просрочено",db.tasks.filter(late).length]);
+ dl("report-"+TODAY+".csv",L.map(function(r){return r.map(q).join(";")}).join("\r\n"),"text/csv")};
+$("#xPdf").onclick=function(){window.print()};
+
+/* резервная копия */
+$("#bExp").onclick=function(){dl("backup-"+TODAY+".json",JSON.stringify(db,null,2),"application/json")};
+$("#bImpL").onclick=function(){$("#bImp").click()};
+$("#bImp").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result.replace(/^\ufeff/,""));if(!Array.isArray(d.recs)||!Array.isArray(d.tasks))throw 0;if(confirm("Заменить текущие данные?")){db=d;save();drawAll()}}catch(x){alert("Файл не похож на резервную копию")}};r.readAsText(f);e.target.value=""};
+
+function drawAll(){drawRecs();drawTasks();drawControl();drawReport()}
+drawAll();
+})();
+</script>
+</body>
+</html>
